@@ -157,3 +157,53 @@ else if (pathName === '/api') {
   res.end(jsonData)
 }
 ```
+
+## 3. Node Package Manager (NPM)
+
+- `npm init -y`
+- `package.json` a configuration file for our projects
+
+### 3.1. Types of packages and Installs
+
+Types of packages
+
+- Dependencies: package that we will include in our own code. Our project depends our those code to work correctly.
+- Development dependencies: package that we will use to develop our applications.
+
+Installs
+
+- Dependencies: `npm install express`
+- Development dependencies: `npm install nodemon --save-dev`
+
+Types of installs
+
+- Local: only availabe in our project folder
+- Global: availabe anywhere in our machine
+
+To use `command` from local dependencies, we have to specify some `npm script` in `package.json`
+
+```json
+"scripts": {
+    "start": "nodemon index.js"
+}
+```
+
+To start the server now, run: `npm run start`
+
+### 3.2. Package versioning and updating
+
+Most packages on npm follows the _Semantic version notation_, which means that
+their version numbers is always expressed with these three numbers.
+
+- The first number is called the `major version`: huge new release which can have breaking changes
+- The second numer is called the `minor version`: introduces new features into the package, but it does not include breaking changes
+- The third number is called the `patch version`: bugs fixed
+
+Updating the package
+
+- Check outdate package: `npm outdated`
+- Install package with a certain version number: `npm install slugify@1.0.0`
+- Run `npm update <package_name>`
+- The `^` means we accept `patch` and `minor` updates
+- The `~` means we accept `patch` updates
+- The `*` means we accept all of the version updates
