@@ -123,6 +123,8 @@ const server = http.createServer((req, res) => {
     res.end('This is the overview page');
   } else if (pathName === '/product') {
     res.end('This is the product page');
+  } else if (pathName === '/api') {
+    res.end('This is the API');
   } else {
     const header = {
       'Content-type': 'text/html',
@@ -133,4 +135,25 @@ const server = http.createServer((req, res) => {
     res.end('<h1>Page not found</h1>');
   }
 });
+```
+
+### 2.6. Building a very simple API
+
+Web API basically a service from which we can request some data
+
+Let's define a very simple API
+
+In Node, the `dot` in `fs.readFile('./dev-data/data.json')` actually refers to the
+directory from which we run the node command in the terminal.
+
+If we move the `index.js` to another place and then executed it. The `.` will point
+to the wrong location. So, to fix that, we use the variable called `__dirname`
+
+The best practice is to use the variable `__dirname`
+
+```js
+else if (pathName === '/api') {
+  res.writeHead(200, { 'Content-type': 'application/json' })
+  res.end(jsonData)
+}
 ```
