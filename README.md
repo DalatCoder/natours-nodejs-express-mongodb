@@ -344,3 +344,11 @@ In general terms
   - fill up website templates
 
 ![Image](assets/frontendbackend1.png)
+
+### 4.3. Static vs Dynamic vs API
+
+![Image](assets/staticvsdynamicvsapi.png)
+
+![Image](assets/dynamicvsapi.png)
+
+![Image](assets/api.png)
