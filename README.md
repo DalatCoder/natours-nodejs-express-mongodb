@@ -76,3 +76,30 @@ NodeJS uses callback so often
 Callback hell
 
 ![Image](assets/async5.png)
+
+### 2.4. Create a simple web server
+
+```js
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  res.end('Hello from the server!');
+});
+
+server.listen(8000, '127.0.0.1', () => {
+  console.log('Listening to requests on port 8000');
+});
+```
+
+- `createServer` accepts a callback function, which will be fired off each time
+  a new request hits our server.
+
+- `listen` listens for incomming requests from the client
+
+- run the application: `node index.js`
+
+- the app keeps running, that's because of something called the event loop. It is
+  obvious that the app cannot really exit right away, because then we could not
+  receive any new requests.
+
+- to exit the application, press `Ctrl C`
