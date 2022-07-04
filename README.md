@@ -299,3 +299,48 @@ Some more words about TPC/IP
 - The job of IP is to actually send and route all these packets through the internet.
   It ensures that all of them arrive at the destination that they should go using IP
   addresses on each packet.
+
+### 4.2. Frontend vs. Backend Development
+
+In order to distinguish between the frontend and the backend of a website, we still
+consider the same client-server architecture
+
+In general terms
+
+- Frontend development is about everything that happens in the web browser.
+
+  - Designing & Building the final website that gonna be visible to the user
+  - Basic techs: HTML, CSS, JS
+  - Modern tools: React, Angular, Redux, GraphQL,...
+
+- Backend development is about everything that happens on the web server. So everything
+  that is invisible to the final user.
+
+- A server is really just a computer that is connected to the internet, which:
+
+  - First, stores a website's files like HTML, CSS and images,...
+  - Second, runs an HTTP server that is capable of understanding URLs, requests, and also
+    delivering responses.
+
+- A simple web server like the image below is called a static server. Because all is can really
+  do is to serve static files to the client via HTTP. If you just need to host a simple website,
+  then this is really all you need.
+
+![Image](assets/frontendbackend.png)
+
+- If you want to create dynamic web applications that talk to databases and all
+  that good stuff, we use a server that is also capable of running our dynamic application.
+  This is then called a `dynamic server`, where we have our app running, an HTTP server, and
+  of course, the files all talking to each other.
+
+- Some usual stuffs that is handled on the backend or the server side are:
+
+  - create user profiles
+  - perform login
+  - send emails
+  - handle payment
+  - retrieve and send request data from a database to the client
+  - manipulate data in the databse
+  - fill up website templates
+
+![Image](assets/frontendbackend1.png)
