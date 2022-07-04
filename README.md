@@ -207,3 +207,95 @@ Updating the package
 - The `^` means we accept `patch` and `minor` updates
 - The `~` means we accept `patch` updates
 - The `*` means we accept all of the version updates
+
+## 4. Introduction to Back-end Development
+
+### 4.1. An overview of how the web works?
+
+- What does actually happens each time that we type a URL into our browser in order to
+  open up a new webpage?
+- Or each time that we request data from some API?
+
+Well, the most simpler answer is that our browser which is also called a client sends
+a request to the server where the webpage is hosted. And the server will then send back
+a response, which is gonna contain the webpage that we just requested.
+
+This process is called the `request-response model` or also the `client-server architecture`
+
+![Image](assets/clientserver.png)
+
+Structure of an URL: `https://www.google.com/maps`
+
+- Protocol: `HTTP` or `HTTPS` talk later
+- Domain name: `www.google.com`
+- Resource: `/maps` the resource that we want to access
+
+The domain name is not actually the address of the server, but just the nice name
+that is easy for us to memorize.
+
+`DNS` is a way of converting the domain name to the real address of the server.
+This happens through your internet service provider (ISP)
+
+![Image](assets/clientserver1.png)
+
+And this is how the real IP address looks like: `https://216.58.211.206:443`
+
+![Image](assets/clientserver2.png)
+
+- Protocol
+- IP Address: `216.58.211.206`
+- Port number: `443`, to identify a specific service running on a server and
+  so you can think of it like a sub-address
+
+When we have the real web address, a TCP socket connection is established
+between the browser and the server, which are now finally connected. And this
+connection is typically kept alive for the entire time it takes to transfer all
+the files of the website.
+
+- TCP is the Tranmission Control Protocol
+- IP is the Internet Protocol
+
+Together, they are communication protocols that define exactly how data
+travels across the web.
+
+Then, client makes an `HTTP request`, where `HTTP` stands for `HyperText Transfer Protocol`.
+So after `TCP/IP`, `HTTP` is yet another communication protocol. And by the way, the
+communication protocol is simply a system of rules that allows two or more
+parties to communicate.
+
+`HTTP` is just a protocol that allows clients and web servers to communicate by
+sending requests and response messages from client to server and back.
+
+An `HTTP` request to the server is not only for `getting data`, but we can
+also `send data`.
+
+An `HTTP` response message also looks quite similar to the request.
+
+This is a single `request-response` cycle
+
+![Image](assets/clientserver3.png)
+
+When we do the first request, all we get back is just the initial HTML file.
+That file will then gets scanned for all the assets that it needs to build the
+entire website like Javascript, CSS files, images files or other assets. And for
+each of different files, the browser will then make a new `HTTP request` to the
+server.
+
+There can be multiple requests and responses happening at the same time. But the
+amount is actually limited because the connection would start to slow down.
+
+And then, when all the files have arrived, the website is rendered in the browser.
+
+![Image](assets/clientserver4.png)
+
+Some more words about TPC/IP
+
+- The job of TCP is to break out the requests and responses into thousands of
+  small chunks called `packets` before they are sent.
+- Then, once they get to their destination, it will reassemble all the packets into
+  the original request or response. So that the message arrives at the destination
+  as quick as possible, which would not be possible if we sent the website as one
+  big chunk.
+- The job of IP is to actually send and route all these packets through the internet.
+  It ensures that all of them arrive at the destination that they should go using IP
+  addresses on each packet.
