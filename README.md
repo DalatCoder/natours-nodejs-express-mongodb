@@ -32,3 +32,47 @@ console.log(textIn);
 const textOut = 'Text out';
 fs.writeFileSync('out.txt', textOut);
 ```
+
+### 2.3. Blocking and Non-blocking: Asynchronous Nature of NodeJS
+
+- **Synchronous** way: each statement is basically processed one after another, line by line
+- **Asynchronous** non-blocking code: we upload heavy work to basically be worked on in the background. And then,
+  when that work is done, a callback function that we register before is called to handle the result. And during all
+  that time, the rest of the code can still be executing without being blocked by the heavy task, which is now running
+  in the background
+
+![Image](assets/async1.png)
+
+What problem with blocking code execution in NodeJS?
+
+- In NodeJS process: this is where our NodeJS app runs
+- There's only one single thread
+
+  - The thread is just like a set of instructions that is run in the computer's CPU
+  - The thread is where our code is actually executed in a machine's processor
+
+NodeJS is basically single-threaded. For each application, there's only one thread.
+That's just the way NodeJS was designed.
+
+So in the picture, all users will be executed all in the same thread at the same place in
+the computer running the application.
+
+And that is true no matter if you have 5 users, like in this picture, or 5.000 or 5.000.000 users.
+Now, what this also means is that when one user locks the single thread with synchronous code, then all
+other users will have to wait for that execution to finish.
+
+Synchronous way
+
+![Image](assets/async2.png)
+
+Asynchronous way, non-block I/O model. Non-blocking input, output such as reading a file, call an api with request,...
+
+![Image](assets/async3.png)
+
+NodeJS uses callback so often
+
+![Image](assets/async4.png)
+
+Callback hell
+
+![Image](assets/async5.png)
