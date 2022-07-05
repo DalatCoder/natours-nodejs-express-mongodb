@@ -593,3 +593,26 @@ This is called the `Observer Pattern` in Javascript programming in general, and 
 quite a popular pattern with many used cases.
 
 ![Image](assets/eventdriven1.png)
+
+### 5.5. Introduction to Stream
+
+A fundamental concept in NodeJS.
+
+> Streams: Used to process (read and write) data piece by piece (chunks), without
+> completing the whole read or write operation, and therefore without keeping all
+> the data in memory.
+
+For example, when we read a file using `stream`, we read `part` of the data,
+`do something` with it, then `free` our memory, and `repeat` this until the
+entire file has been processed.
+
+Or think of `Youtube` or `Netflix`, which are both called streaming companies, because
+they stream video using the same principle. So instead of waiting until the entire
+video file loads, the processing is done piece by piece or in `chunks`, so you can
+start watching even before the entire file has been downloaded.
+
+So the princile here is not just about NodeJS. But universal to computer science in general.
+
+![Image](assets/stream.png)
+
+![Image](assets/stream1.png)
