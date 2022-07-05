@@ -352,3 +352,37 @@ In general terms
 ![Image](assets/dynamicvsapi.png)
 
 ![Image](assets/api.png)
+
+## 5. How NodeJS Look behind the scene
+
+### 5.1. Node, V8, Libuv and C++
+
+Node dependencies:
+
+- V8 Javascript engine: understanding Javascript code, convert JS code into machine code
+- Libuv: focus on asynchronous IO, this layer give Node access to the underlying computer
+  operating system, file system, networking, and more. Besides that, `libuv` also
+  implements two extremely important features of NodeJS
+
+  - Event loop: responsible for handling easy tasks like executing call backs and network IO
+  - Thread pool: responsible for more heavy work like file access or compressionor something like that
+
+Libuv is completely written in C++ and not in Javascript. And V8 itself, also uses C++
+code besides Javascript. So therefore, Node itself is a program written in C++ and Javascript.
+
+The beauty of this is that NodeJS ties all these library together, no matter if written in C++
+or Javascript and then gives us developers access to their functions in pure Javascript. So it
+really provides us with a very nice layer of abstraction.
+
+So again, this architecture allows us to write 100% pure JS code running in NodeJS
+and still access functions like for file reading, which behind the scenes are
+actually implemented in `libuv` or other libraries in the `C++` language.
+
+Other libraries that `NodeJS` depends on:
+
+- `http-parser`: parse HTTP
+- `c-ares`: DNS requests stuff
+- `OpenSSL`: cryptography
+- `zlib`: compression
+
+![Image](assets/nodearchitecture.png)
