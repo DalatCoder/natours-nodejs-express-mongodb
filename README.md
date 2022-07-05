@@ -386,3 +386,61 @@ Other libraries that `NodeJS` depends on:
 - `zlib`: compression
 
 ![Image](assets/nodearchitecture.png)
+
+### 5.2. Processes, Threads and the Thread pool
+
+When we use Node on a computer, it means that there is a `Node process` running
+on that computer.
+
+The `process` is just a program in `execution`. And we already learned that NodeJS
+is basically a C++ program, which will therefore start a process when it's running.
+This is important, because in Node, we actually have access to a `process` variable,
+which we're gonna use later in this course.
+
+In that `process`, NodeJS runs a so-called `single thread`
+
+The `thread` is basically just a sequence of instructions.
+
+Learn more about Computer Science for `process` and `thread`.
+
+Node runs in just `one thread`, which makes it easy to block Node applications.
+And this is one of the unique feature of NodeJS.
+
+So again, if you run your Node application, it'll run in just a single thread.
+No matter if you have 10 users or 10 million users accessing your application
+at the same time. And so you need to be very careful about not blocking that thread.
+
+Let's now quickly understand exactly what happens in a single thread when you start your
+Node application
+
+- Initialze program
+- Execute all the `top-level` code or all the code that is not inside any callback function
+- Require all the modules that your app needs
+- Register all the callbacks
+- Start the `event loop`
+
+The `event loop` is where most of the work is done in your app. So, it's really the
+heart of the entire Node architecture.
+
+Some tasks are actually too heavy to be executed in the `event loop` because
+they would then block the `single thread`. And so, that's where the `thread pool`
+comes in.
+
+The `thread pool` is just like `event loop`, which is provided to NodeJS by
+the `libuv` library.
+
+The `thread pool` gives us `4 additional threads`, that are completely seperate
+from the `main single thread`. And we can actually configure it up to `128 threads`.
+But usually, these `4` are enough.
+
+These threads together formed a `thread pool`. The `event loop` can then `automatically`
+offload heavy tasks to the thread pool. And all this happens `automatically`
+behind the scenes. It's not us developers who decide what goes to `thread pool`
+and what doesn't.
+
+The expensive tasks that get offload from the `event loop` are
+
+- All operations dealing with files
+- Everything related to cryptography, like hashing password, ...
+- All compress stuff
+- DNS lookup
