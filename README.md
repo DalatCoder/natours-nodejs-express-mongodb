@@ -708,3 +708,11 @@ only executed in the first call. In subsequent calls, the result is simply retri
 from cache.
 
 ![Image](assets/module4.png)
+
+## 6. Asynchronous
+
+## 7. Express
+
+### 7.1. What is Express?
+
+![Image](assets/express.png)
