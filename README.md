@@ -762,3 +762,62 @@ app.get('/', (req, res) => {
   });
 });
 ```
+
+### 7.4. API and RESTFUL API Design
+
+> API: Application Programming Interface: a piece of software that can be used
+> by another piece of software, in order to allow applications to talk to each
+> other.
+
+![Image](assets/api1.png)
+
+REST stands for Representational States Transfer is basically a way of building
+web APIs in a logical way, making them easy to consume.
+
+Now, to build RESTFul APIs, which means APIs following the REST architecture, we
+just need to follow a couple of principles.
+
+- First, we need to seperate our API into logical resources.
+
+  - The key abstraction of information in REST is a resource, and therefore all
+    the data that we wanna share in the API should be divided into logical resources.
+
+  - What actually is a resource?
+
+  ![Image](assets/rest.png)
+
+- These resources should then be exposed, which means to be made available using
+  structured, resource-based URLs.
+
+  - URL
+  - API endpoint
+
+  ![Image](assets/rest1.png)
+
+- To perform different actions on data, like reading or creating or deleting data,
+  the API should use the right HTTP methods and not the URL.
+
+  - Bad design, they will quickly become a nightmare to maintain
+
+  ![Image](assets/rest2.png)
+
+  - Good design, using `HTTP methods` to perform action on data
+
+  ![Image](assets/rest3.png)
+
+  - Some opeartions aren't CRUD, and in that case, we just need to get creative
+    with our inputs. For example, a login or a search operation can have the endpoints
+    like `/login` or `/search`.
+
+  - Some endpoints actually include two resources at the same time
+
+  ![Image](assets/rest4.png)
+
+- The data that we actually send back to the client or that we received from the
+  client should usually use the JSON data format.
+
+  ![Image](assets/rest5.png)
+
+- Finally, another important principle of REST APIs is that they must be `stateless`
+
+  ![Image](assets/rest6.png)
