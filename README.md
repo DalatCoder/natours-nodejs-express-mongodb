@@ -550,3 +550,46 @@ We need `event loop` because in `NodeJS`, everything works in one `single thread
 
 There are some potential solutions to these blocking problems, like manually offloading
 to the `thread pool` or using `child processes`.
+
+### 5.4. Events and Event-Driven architecture
+
+Most of Node's core modules like HTTP, File System and Timers are built around
+an event-driven architecture. And we can of course use this architecture to our
+advantage in our own code.
+
+And the concept is actually quite simple
+
+In Node, there are certain objects called `event emitters` that emit `named events`
+as soon as something important hapens in the app, like request hitting server, or
+a timer expiring, or a file finishing to read.
+These events can then be picked up by `event listeners` that we developers setup, which
+will fire off callback functions that are attached to each listener.
+
+So again, one one hand, we have `event emitters`, and on the other hand, we have
+`event listeners` that will react to `emitted events` by calling `callback function`
+
+![Image](assets/eventdriven.png)
+
+The example show how Node use the event-driven architecture to handle server requests in
+the HTTP module.
+
+```js
+const server = http.createServer();
+
+server.on('request', (req, res) => {
+  console.log('Request received');
+  res.end('Request received');
+});
+```
+
+- `server.on`: create a `listener`
+- `request`: name of the `event`
+
+So let's say we have our server running, and a new request is made. The server acts
+as an `emitter`, and will automatically emit an event called `request` each time a
+request hits the server.
+
+This is called the `Observer Pattern` in Javascript programming in general, and it's
+quite a popular pattern with many used cases.
+
+![Image](assets/eventdriven1.png)
