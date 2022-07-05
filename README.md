@@ -444,3 +444,5 @@ The expensive tasks that get offload from the `event loop` are
 - Everything related to cryptography, like hashing password, ...
 - All compress stuff
 - DNS lookup
+
+![Image](assets/nodeprocess.png)
