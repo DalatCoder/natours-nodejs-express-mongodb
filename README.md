@@ -720,3 +720,45 @@ from cache.
 ### 7.2. Installing Postman
 
 A powerful tool to do API testing.
+
+### 7.3. Setting up Express and basic routing
+
+Install express version 4: `npm i express@4`
+
+It's convention to put all `express` stuff in a file called `app.js`
+
+Create a simple web server using `express`
+
+```js
+const express = require('express');
+
+const port = 3000;
+const app = express();
+
+app.listen(port, () => {
+  console.log(`App running on port ${port}...`);
+});
+```
+
+Routing means basically to determine how an application responds to a certain
+client request, so to a certain URL. And actually, it's not just a URL but also
+the HTTP method which is used for that request.
+
+Send a raw string
+
+```js
+app.get('/', (req, res) => {
+  res.status(200).send('Hello world');
+});
+```
+
+Send an object as JSON, `express` will automatically set the `Content-type` to
+`application/json`
+
+```js
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Hello world',
+  });
+});
+```
