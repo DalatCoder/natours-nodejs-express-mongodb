@@ -616,3 +616,95 @@ So the princile here is not just about NodeJS. But universal to computer science
 ![Image](assets/stream.png)
 
 ![Image](assets/stream1.png)
+
+### 5.6. How Requiring Modules Really Works?
+
+In NodeJS module system
+
+- Each JS file is treated as a seperate module
+- NodeJS uses the `CommonJS module system`
+
+  - `require()`
+  - `exports`
+  - `module.exports`
+
+- `ES module system` is used in browsers: `import/export`
+- There have been attempts to bring `ES module system` to NodeJS (`.mjs`)
+
+![Image](assets/module.png)
+
+What happens when we `require()` a module?
+
+The following steps are executed behind the scenes:
+
+- First, the path to the required module is resolved and the file is loaded
+- A process called `wrapping` happens
+- The module code is executed
+- The module `exports` are returned
+- The entire module gets cached
+
+Detail
+
+How does Node know which file to load when we require a module?
+
+We can actually load `3` kind of modules:
+
+- Core modules: `require('http')`
+- Developer modules: `require('./lib/controller')`
+- 3rd-party modules (from NPM): `require('express')`
+
+So this process is known as resolving the file path. When the require functions
+receives the module name as its input. It will first try to load a `core module`
+with that name. It will automatically find a path to that module and then load it.
+Now, if the path starts with a `dot`, or two `dots`. It means that it's a developer
+module. Because we indicate the relative path to our file. So Node will try to load
+that file. But if there is no file with that name, then it will look for a folder instead and
+load `index.js` if it's in that folder. In this above example, it will load the `controller.js`
+file (we can omit the `.js` extension), if there is no `controller.js` file, it will then
+load the `index.js` inside the `controller` folder. And finally, if it's not the `core module`
+or the `developer module`, Node will assume it's a module from NPM. So these third party modules
+are stored in a `node_modules` folder. So Node will step into that folder and try to find
+a module there and then load it.
+
+![Image](assets/module1.png)
+
+Moving on, after the module is loaded. The module's code is wrapped into a specific
+function which will give us access to a couple of special objects. It is here where
+we get the answer to the question: Where does the `require` function actually come from and
+why do we have access to it? It's because the NodeJS runtime takes the code off our module
+and puts it inside the `immediately invoked function expression` (IIFE).
+
+So Node does actually not directly execute the code that we write into a file. But instead,
+the wrapper function that will contain our code in its body. It also passes the `exports`,
+`require`, `module`, `__filename`, `__dirname` objects into it. So that why in every module,
+we automatically have access to stuff like the `require` function.
+
+Now by doing this, Node achieves two very important things
+
+- Giving developers access to all these variables we just talked about
+- It keeps top-level variables that we define in our modules private. So it's scoped only
+  to the current module instead of leaking everything into the global object.
+
+So each module having its private scope is absolutely crucial and is achieved
+through this clever trick of wrapping our code into this special function.
+
+![Image](assets/module2.png)
+
+Next up, the code in the module (or in the module's wrapper function) actually gets
+executed by the `NodeJS` runtime.
+
+And then, it's time for the `require` function to actually return something.
+And what it returns is the `exports` of the required module. These `exports` are
+stored in the `module.exports` object.
+
+`exports` is just a `pointer` to `module.exports`
+
+![Image](assets/module3.png)
+
+The last step is that modules are actually cached after the first time they
+are loaded. What this means is that if you require the same module multiple times,
+you will always get the same result. And the code in the modules is actually
+only executed in the first call. In subsequent calls, the result is simply retrieved
+from cache.
+
+![Image](assets/module4.png)
