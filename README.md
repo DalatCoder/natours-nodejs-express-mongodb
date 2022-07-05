@@ -716,3 +716,7 @@ from cache.
 ### 7.1. What is Express?
 
 ![Image](assets/express.png)
+
+### 7.2. Installing Postman
+
+A powerful tool to do API testing.
