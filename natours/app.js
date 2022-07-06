@@ -10,7 +10,7 @@ let tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -18,9 +18,9 @@ app.get('/api/v1/tours', (req, res) => {
       tours,
     },
   });
-});
+};
 
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTourById = (req, res) => {
   const tourId = req.params.id * 1;
 
   const tour = tours.find((t) => t.id === tourId);
@@ -39,9 +39,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
       tour,
     },
   });
-});
+};
 
-app.post('/api/v1/tours', (req, res) => {
+const createNewTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
 
   const newTour = {
@@ -71,9 +71,9 @@ app.post('/api/v1/tours', (req, res) => {
       });
     }
   );
-});
+};
 
-app.patch('/api/v1/tours/:id', (req, res) => {
+const updateTourById = (req, res) => {
   const tourId = req.params.id * 1;
   const tour = tours.find((t) => t.id === tourId);
 
@@ -112,9 +112,9 @@ app.patch('/api/v1/tours/:id', (req, res) => {
       });
     }
   );
-});
+};
 
-app.delete('/api/v1/tours/:id', (req, res) => {
+const deleteTourById = (req, res) => {
   const tourId = req.params.id * 1;
 
   tours = tours.filter((t) => t.id !== tourId);
@@ -137,7 +137,15 @@ app.delete('/api/v1/tours/:id', (req, res) => {
       });
     }
   );
-});
+};
+
+app.route('/api/v1/tours').get(getAllTours).post(createNewTour);
+
+app
+  .route('/api/v1/tours/:id')
+  .get(getTourById)
+  .patch(updateTourById)
+  .delete(deleteTourById);
 
 app.listen(port, () => {
   console.log(`App running on port ${port}...`);

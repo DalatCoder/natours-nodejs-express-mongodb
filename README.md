@@ -1006,3 +1006,27 @@ app.delete('/api/v1/tours/:id', (req, res) => {
   );
 });
 ```
+
+### 7.6. Refactoring our routes
+
+First, we extract all `route handler functions` to its own methods
+
+```js
+app.get('/api/v1/tours', getAllTours);
+app.get('/api/v1/tours/:id', getTourById);
+app.post('/api/v1/tours', createNewTour);
+app.patch('/api/v1/tours/:id', updateTourById);
+app.delete('/api/v1/tours/:id', deleteTourById);
+```
+
+Next, we will `group` all relative `API endpoint` into one single group
+
+```js
+app.route('/api/v1/tours').get(getAllTours).post(createNewTour);
+
+app
+  .route('/api/v1/tours/:id')
+  .get(getTourById)
+  .patch(updateTourById)
+  .delete(deleteTourById);
+```
