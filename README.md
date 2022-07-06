@@ -1030,3 +1030,44 @@ app
   .patch(updateTourById)
   .delete(deleteTourById);
 ```
+
+### 7.7. Middleware and the Request-Response cycle
+
+To start the request-response cycle, or `express` app receives a request when
+someone hits a server for which it will then create a `request` and `response` object.
+
+That data will then be used and processed in order to generate and send back a
+meaningful response.
+
+In order to process that data, in `express` we use something called `middleware`,
+which can manipulate the request or response object.
+
+It called `middleware` because it's a function that is executed between. So in
+the middle of receiving the request and sending the response.
+
+In `epxress`, everything is `middleware`. When we difined our routes, we can think
+of the `route handler` functions that we wrote as `middleware functions`. There are
+simply `middleware` functions that are only executed for `certain routes`.
+
+![Image](assets/middleware.png)
+
+In more technical term, we say that all the middleware together that we use
+in our app, is called `middleware stack`. It's important to keep in mind here, is
+that the `order` of middleware in the `stack`, is actually defined by the order
+they are defined in the code.
+
+So a middleware that appears first in the code is executed before one that appears later.
+And so the order of the code matters a lot in `express`.
+
+The data in the incoming request is processed through our middleware stack, in evey middleware, after
+we finished manipulating the data, we call `next()` to move to the next one.
+The process continues until it reach `res.send()`. At this time, we finally send
+the response data back to the client
+
+![Image](assets/middleware1.png)
+
+And like this, we then finish the so-called `request-response cycle`. It starts with the
+incoming request, then executing all the middleware in the `middleware stack`, step by step,
+and finally sending the `response` to finish the `cycle`.
+
+![Image](assets/middleware2.png)
