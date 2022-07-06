@@ -821,3 +821,188 @@ just need to follow a couple of principles.
 - Finally, another important principle of REST APIs is that they must be `stateless`
 
   ![Image](assets/rest6.png)
+
+### 7.5. Setup Simple API for tours
+
+Read data from file
+
+```js
+const tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
+);
+```
+
+Create an `API Endpoint` for getting all tours, using `JSend` standard to format
+`JSON` data. Convention to include the `results` field when there is an `array`
+of data in the `response`.
+
+```js
+app.get('/api/v1/tours', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      tours,
+    },
+  });
+});
+```
+
+Create an `API Endpoint` for creating new data. By default, `express` does not convert
+data in `request body` to `object`. So, we need to include a `middleware` to do that.
+
+Middleware is just a function that can use to modify the incoming request data. We
+will talk about it later.
+
+```js
+app.use(express.json());
+```
+
+Then, we define an `Endpoint`, handle incoming request data, push it to the array and then
+save it to the file.
+
+```js
+app.post('/api/v1/tours', (req, res) => {
+  const newId = tours[tours.length - 1].id + 1;
+
+  const newTour = {
+    id: newId,
+    ...req.body,
+  };
+
+  tours.push(newTour);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      if (err) {
+        res.status(500).json({
+          status: 'error',
+          message: 'error when saving data',
+        });
+        return;
+      }
+
+      res.status(201).json({
+        status: 'success',
+        data: {
+          tour: newTour,
+        },
+      });
+    }
+  );
+});
+```
+
+To getting only `1 tour` by `id`, we will use the `URL parameter` feature of `express`.
+And then, we will get the `id` value through `req.params` object
+
+```js
+app.get('/api/v1/tours/:id', (req, res) => {
+  const tourId = req.params.id * 1;
+
+  const tour = tours.find((t) => t.id === tourId);
+
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'tour not found',
+    });
+    return;
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
+```
+
+If the param `x` is optional, we can define like this
+
+```js
+app.get('/api/v1/tours/:id/:x?', (req, res) => {
+  const id = req.params.id;
+  const x = req.params.x || 0;
+});
+```
+
+We have `2 methods` for updating tours:
+
+- `PUT`: expected user to upload an `entire` updated tour
+- `PATCH`: expected user to upload some `fields` that need to be updated
+
+```js
+app.patch('/api/v1/tours/:id', (req, res) => {
+  const tourId = req.params.id * 1;
+  const tour = tours.find((t) => t.id === tourId);
+
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'tour not found',
+    });
+    return;
+  }
+
+  const updatedTour = {
+    ...tour,
+    ...req.body,
+  };
+
+  tours = tours.map((t) => (t.id === tourId ? updatedTour : t));
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      if (err) {
+        res.status(500).json({
+          status: 'error',
+          message: 'error when saving file',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: {
+          tour: updatedTour,
+        },
+      });
+    }
+  );
+});
+```
+
+And the code below for deleting a tour
+
+```js
+app.delete('/api/v1/tours/:id', (req, res) => {
+  const tourId = req.params.id * 1;
+
+  tours = tours.filter((t) => t.id !== tourId);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      if (err) {
+        res.status(500).json({
+          status: 'error',
+          message: 'error when saving file',
+        });
+        return;
+      }
+
+      res.status(204).json({
+        status: 'success',
+        data: null,
+      });
+    }
+  );
+});
+```
