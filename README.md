@@ -1071,3 +1071,39 @@ incoming request, then executing all the middleware in the `middleware stack`, s
 and finally sending the `response` to finish the `cycle`.
 
 ![Image](assets/middleware2.png)
+
+### 7.8. Creating our own middleware
+
+Define a simple `global` middleware that is executed for all `requests`
+
+```js
+app.use((req, res, next) => {
+  console.log('custom middleware');
+  next();
+});
+```
+
+Define a simple `global` middleware to `manipulate` the request object
+
+```js
+app.use((req, res, next) => {
+  req.requestStartTime = Date.now();
+  next();
+});
+```
+
+And then, we can use this information to calculate the time need to proceed the route
+
+```js
+const getAllTours = (req, res) => {
+  console.log(Date.now() - req.requestStartTime);
+
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      tours,
+    },
+  });
+};
+```
