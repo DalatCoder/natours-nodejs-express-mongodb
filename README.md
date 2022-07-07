@@ -1107,3 +1107,16 @@ const getAllTours = (req, res) => {
   });
 };
 ```
+
+### 7.9. Using 3rd-Party middleware
+
+We will use a third-party middleware functions called `Morgan`. It's very popular
+loggin middleware.
+
+Install `morgan`: `npm i morgan@1`
+
+Add middleware at the top of our code
+
+```js
+app.use(morgan('dev'));
+```

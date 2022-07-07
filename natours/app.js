@@ -1,15 +1,12 @@
 const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
 
 const port = 3000;
 const app = express();
 
+app.use(morgan('dev'));
 app.use(express.json());
-
-app.use((req, res, next) => {
-  req.requestStartTime = Date.now();
-  next();
-});
 
 let tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
