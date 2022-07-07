@@ -1137,16 +1137,6 @@ app
 
 ### 7.11. Creating and Mounting Multiple Routes
 
-At this time, the code in `app.js` is so much. So that, we will extract those
-related code into its own file.
-
-So we will extract like this:
-
-- 1 file for storing all `tour` routes
-- 1 file for storing all `user` routes
-- 1 file for storing all `tour` route hanlders
-- 1 file for storing all `user` route handlers
-
 We will create a `router` for each `resource`
 
 ```js
@@ -1182,4 +1172,250 @@ to a specific `URL` (or a specific `route`).
 
 ```js
 app.use('/api/v1/tours', tourRouter);
+```
+
+### 7.12. A better file structure
+
+At this time, the code in `app.js` is so much. So that, we will extract those
+related code into its own file.
+
+So we will extract like this:
+
+- 1 file for storing all `tour` routes
+- 1 file for storing all `user` routes
+- 1 file for storing all `tour` route hanlders
+- 1 file for storing all `user` route handlers
+
+Create new folder called `routes` with 2 files: `tourRoutes.js` and `userRoutes.js`
+
+Move all the `tour routes` from `app.js` into `tourRoutes.js`
+
+```js
+const fs = require('fs');
+const express = require('express');
+
+const router = express.Router();
+
+let tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
+);
+
+const getAllTours = (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      tours,
+    },
+  });
+};
+
+const getTourById = (req, res) => {
+  const tourId = req.params.id * 1;
+
+  const tour = tours.find((t) => t.id === tourId);
+
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'tour not found',
+    });
+    return;
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+};
+
+const createNewTour = (req, res) => {
+  const newId = tours[tours.length - 1].id + 1;
+
+  const newTour = {
+    id: newId,
+    ...req.body,
+  };
+
+  tours.push(newTour);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      if (err) {
+        res.status(500).json({
+          status: 'error',
+          message: 'error when saving data',
+        });
+        return;
+      }
+
+      res.status(201).json({
+        status: 'success',
+        data: {
+          tour: newTour,
+        },
+      });
+    }
+  );
+};
+
+const updateTourById = (req, res) => {
+  const tourId = req.params.id * 1;
+  const tour = tours.find((t) => t.id === tourId);
+
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'tour not found',
+    });
+    return;
+  }
+
+  const updatedTour = {
+    ...tour,
+    ...req.body,
+  };
+
+  tours = tours.map((t) => (t.id === tourId ? updatedTour : t));
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      if (err) {
+        res.status(500).json({
+          status: 'error',
+          message: 'error when saving file',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        status: 'success',
+        data: {
+          tour: updatedTour,
+        },
+      });
+    }
+  );
+};
+
+const deleteTourById = (req, res) => {
+  const tourId = req.params.id * 1;
+
+  tours = tours.filter((t) => t.id !== tourId);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      if (err) {
+        res.status(500).json({
+          status: 'error',
+          message: 'error when saving file',
+        });
+        return;
+      }
+
+      res.status(204).json({
+        status: 'success',
+        data: null,
+      });
+    }
+  );
+};
+
+router.route('/').get(getAllTours).post(createNewTour);
+
+router
+  .route('/:id')
+  .get(getTourById)
+  .patch(updateTourById)
+  .delete(deleteTourById);
+
+module.exports = router;
+```
+
+Now, in the `app.js`, we import the `tourRouter` and mount this `router` into `app`
+
+```js
+const express = require('express');
+const morgan = require('morgan');
+
+const tourRouter = require('./routes/tourRoutes');
+
+const port = 3000;
+const app = express();
+
+app.use(morgan('dev'));
+app.use(express.json());
+
+app.use('/api/v1/tours', tourRouter);
+
+app.listen(port, () => {
+  console.log(`App running on port ${port}...`);
+});
+```
+
+So we have our routers now each in one different file, and we can say that each
+of them is one small sub-application. And then we then put everything together
+in our global `app` file by importing these `routes` and then `mounting` these `routers`.
+
+We created these different `routers` for each of the `resources` to have a nice
+`seperation of concern` between these `resources`. So basically creating one small
+application for each of them and then putting everything together in one `main` file.
+
+The `app.js` file is mainly use for declaring `middleware` in our application.
+
+For the `route handler` functions, we will extract those into the `controllers` folder.
+In the `MVC` architecture, the `handler` functions are actually called `controller`.
+
+```js
+// tourController.js
+
+const fs = require('fs');
+
+let tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
+);
+
+exports.getAllTours = (req, res) => {};
+
+exports.getTourById = (req, res) => {};
+
+exports.createNewTour = (req, res) => {};
+
+exports.updateTourById = (req, res) => {};
+
+exports.deleteTourById = (req, res) => {};
+```
+
+```js
+// tourRoutes.js
+
+const express = require('express');
+
+const {
+  getAllTours,
+  createNewTour,
+  getTourById,
+  updateTourById,
+  deleteTourById,
+} = require('../controllers/tourController');
+
+const router = express.Router();
+
+router.route('/').get(getAllTours).post(createNewTour);
+
+router
+  .route('/:id')
+  .get(getTourById)
+  .patch(updateTourById)
+  .delete(deleteTourById);
+
+module.exports = router;
 ```
