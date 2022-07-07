@@ -1120,3 +1120,66 @@ Add middleware at the top of our code
 ```js
 app.use(morgan('dev'));
 ```
+
+### 7.10. Implementing the "Users" routes
+
+Define API Endpoint for `user` resource
+
+```js
+app.route('/api/v1/users').get(getAllUsers).post(createNewUser);
+
+app
+  .route('/api/v1/users/:id')
+  .get(getUserById)
+  .patch(updateUser)
+  .delete(deleteUser);
+```
+
+### 7.11. Creating and Mounting Multiple Routes
+
+At this time, the code in `app.js` is so much. So that, we will extract those
+related code into its own file.
+
+So we will extract like this:
+
+- 1 file for storing all `tour` routes
+- 1 file for storing all `user` routes
+- 1 file for storing all `tour` route hanlders
+- 1 file for storing all `user` route handlers
+
+We will create a `router` for each `resource`
+
+```js
+const tourRouter = express.Router();
+
+tourRouter.route('/api/v1/tours').get(getAllTours).post(createNewTour);
+
+tourRouter
+  .route('/api/v1/tours/:id')
+  .get(getTourById)
+  .patch(updateTourById)
+  .delete(deleteTourById);
+```
+
+To connect `tourRouter` to our `app`, we will use it as middleware.
+
+```js
+const tourRouter = express.Router();
+
+tourRouter.route('/').get(getAllTours).post(createNewTour);
+
+tourRouter
+  .route('/:id')
+  .get(getTourById)
+  .patch(updateTourById)
+  .delete(deleteTourById);
+
+app.use('/api/v1/tours', tourRouter);
+```
+
+And the process here is called `mounting` router. We basically mount a `router`
+to a specific `URL` (or a specific `route`).
+
+```js
+app.use('/api/v1/tours', tourRouter);
+```

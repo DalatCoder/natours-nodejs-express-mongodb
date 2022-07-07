@@ -141,13 +141,17 @@ const deleteTourById = (req, res) => {
   );
 };
 
-app.route('/api/v1/tours').get(getAllTours).post(createNewTour);
+const tourRouter = express.Router();
 
-app
-  .route('/api/v1/tours/:id')
+tourRouter.route('/').get(getAllTours).post(createNewTour);
+
+tourRouter
+  .route('/:id')
   .get(getTourById)
   .patch(updateTourById)
   .delete(deleteTourById);
+
+app.use('/api/v1/tours', tourRouter);
 
 app.listen(port, () => {
   console.log(`App running on port ${port}...`);
