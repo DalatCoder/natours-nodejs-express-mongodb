@@ -1419,3 +1419,19 @@ router
 
 module.exports = router;
 ```
+
+### 7.13. A `server.js` file
+
+It's a good practice to have everything that is related to `express` in one file,
+and then everything that is related to the server in another main file. Now the
+`server.js` will be the `entrypoint`.
+
+```js
+const app = require('./app');
+
+const port = 3000;
+
+app.listen(port, () => {
+  console.log(`App running on port ${port}...`);
+});
+```
