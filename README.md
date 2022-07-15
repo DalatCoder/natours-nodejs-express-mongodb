@@ -1436,14 +1436,40 @@ app.listen(port, () => {
 });
 ```
 
-### 7.14. Params middleware 
+### 7.14. Params middleware
 
-A special kind of `middleware` that only runs for certain paramters. 
+A special kind of `middleware` that only runs for certain paramters.
 
 We can define a middleware for validating the `id` param in the `URL`
 
 ```js
 router.route('/').get(getAllTours).post(createNewTour);
+
+router.param('id', (req, res, next, value) => {
+  // validating the value (id)
+
+  next();
+})
+
+router
+  .route('/:id')
+  .get(getTourById)
+  .patch(updateTourById)
+  .delete(deleteTourById);
+```
+
+### 7.14. Chaining multiple middleware functions
+
+```js
+const checkPostBody = (req, res, next) => {
+  // check required field in post body 
+
+  next();
+}
+
+router.route('/')
+  .get(getAllTours)
+  .post(checkPostBody, createNewTour);
 
 router.param('id', (req, res, next, value) => {
   // validating the value (id)
