@@ -1554,3 +1554,64 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 ```
+
+## 8. Setup Prettier and ESlint
+
+To improve our code quality.
+
+- `Prettier`: the main code formatter
+- `ESlint`: define coding rules (prettier will base on these rules)
+
+Install VSCode extensions
+
+- Prettier
+- ESlint
+
+Install development dependencies
+
+```json
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.12.4",
+    "parcel-bundler": "^1.12.3",
+    "prettier": "^1.17.0"
+  }
+```
+
+Write config file for `prettier`: `.prettierrc`
+
+```json
+{
+  "singleQuote": true
+}
+```
+
+Write config file for `eslint`: `.eslintrc.json`
+
+```json
+{
+  "extends": ["airbnb", "prettier", "plugin:node/recommended"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "spaced-comment": "off",
+    "no-console": "warn",
+    "consistent-return": "off",
+    "func-names": "off",
+    "object-shorthand": "off",
+    "no-process-exit": "off",
+    "no-param-reassign": "off",
+    "no-return-await": "off",
+    "no-underscore-dangle": "off",
+    "class-methods-use-this": "off",
+    "prefer-destructuring": ["error", { "object": true, "array": false }],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
+  }
+}
+```
