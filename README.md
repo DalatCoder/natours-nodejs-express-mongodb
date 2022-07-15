@@ -1435,3 +1435,25 @@ app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 ```
+
+### 7.14. Params middleware 
+
+A special kind of `middleware` that only runs for certain paramters. 
+
+We can define a middleware for validating the `id` param in the `URL`
+
+```js
+router.route('/').get(getAllTours).post(createNewTour);
+
+router.param('id', (req, res, next, value) => {
+  // validating the value (id)
+
+  next();
+})
+
+router
+  .route('/:id')
+  .get(getTourById)
+  .patch(updateTourById)
+  .delete(deleteTourById);
+```
