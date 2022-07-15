@@ -5,12 +5,15 @@ const {
   createNewTour,
   getTourById,
   updateTourById,
-  deleteTourById,
+  deleteTourById
 } = require('../controllers/tourController');
 
 const router = express.Router();
 
-router.route('/').get(getAllTours).post(createNewTour);
+router
+  .route('/')
+  .get(getAllTours)
+  .post(createNewTour);
 
 router
   .route('/:id')

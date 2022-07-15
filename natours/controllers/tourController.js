@@ -9,20 +9,20 @@ exports.getAllTours = (req, res) => {
     status: 'success',
     results: tours.length,
     data: {
-      tours,
-    },
+      tours
+    }
   });
 };
 
 exports.getTourById = (req, res) => {
   const tourId = req.params.id * 1;
 
-  const tour = tours.find((t) => t.id === tourId);
+  const tour = tours.find(t => t.id === tourId);
 
   if (!tour) {
     res.status(404).json({
       status: 'fail',
-      message: 'tour not found',
+      message: 'tour not found'
     });
     return;
   }
@@ -30,8 +30,8 @@ exports.getTourById = (req, res) => {
   res.status(200).json({
     status: 'success',
     data: {
-      tour,
-    },
+      tour
+    }
   });
 };
 
@@ -40,7 +40,7 @@ exports.createNewTour = (req, res) => {
 
   const newTour = {
     id: newId,
-    ...req.body,
+    ...req.body
   };
 
   tours.push(newTour);
@@ -48,11 +48,11 @@ exports.createNewTour = (req, res) => {
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
-    (err) => {
+    err => {
       if (err) {
         res.status(500).json({
           status: 'error',
-          message: 'error when saving data',
+          message: 'error when saving data'
         });
         return;
       }
@@ -60,8 +60,8 @@ exports.createNewTour = (req, res) => {
       res.status(201).json({
         status: 'success',
         data: {
-          tour: newTour,
-        },
+          tour: newTour
+        }
       });
     }
   );
@@ -69,31 +69,31 @@ exports.createNewTour = (req, res) => {
 
 exports.updateTourById = (req, res) => {
   const tourId = req.params.id * 1;
-  const tour = tours.find((t) => t.id === tourId);
+  const tour = tours.find(t => t.id === tourId);
 
   if (!tour) {
     res.status(404).json({
       status: 'fail',
-      message: 'tour not found',
+      message: 'tour not found'
     });
     return;
   }
 
   const updatedTour = {
     ...tour,
-    ...req.body,
+    ...req.body
   };
 
-  tours = tours.map((t) => (t.id === tourId ? updatedTour : t));
+  tours = tours.map(t => (t.id === tourId ? updatedTour : t));
 
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
-    (err) => {
+    err => {
       if (err) {
         res.status(500).json({
           status: 'error',
-          message: 'error when saving file',
+          message: 'error when saving file'
         });
         return;
       }
@@ -101,8 +101,8 @@ exports.updateTourById = (req, res) => {
       res.status(200).json({
         status: 'success',
         data: {
-          tour: updatedTour,
-        },
+          tour: updatedTour
+        }
       });
     }
   );
@@ -111,23 +111,23 @@ exports.updateTourById = (req, res) => {
 exports.deleteTourById = (req, res) => {
   const tourId = req.params.id * 1;
 
-  tours = tours.filter((t) => t.id !== tourId);
+  tours = tours.filter(t => t.id !== tourId);
 
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
-    (err) => {
+    err => {
       if (err) {
         res.status(500).json({
           status: 'error',
-          message: 'error when saving file',
+          message: 'error when saving file'
         });
         return;
       }
 
       res.status(204).json({
         status: 'success',
-        data: null,
+        data: null
       });
     }
   );
