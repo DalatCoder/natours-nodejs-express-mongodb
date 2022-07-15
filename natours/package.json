@@ -4,12 +4,14 @@
   "description": "Learning node, express and mongodb",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "start:dev": "nodemon server.js",
+    "start:prod": "NODE_ENV=production node server.js"
   },
   "keywords": [],
   "author": "Hieu Nguyen Trong",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^7.0.0",
     "express": "^4.18.1",
     "morgan": "^1.10.0"
   },
