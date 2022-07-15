@@ -1494,3 +1494,63 @@ app.use(express.static(`${__dirname}/public`));
 
 And then, we can open the browser and access to `http://localhost:3000/overview.html` to
 see the page.
+
+## 7.17. Environment variables
+
+`NodeJS` or `Express` App can run on different environments. And the most important ones are
+development environment and the production environment.
+
+Depending on different environments, we can use different stuffs like:
+
+- Database
+- Turn logging on or off
+- ...
+
+We will set all of the `environment variables` in the `server.js` file
+
+```js
+console.log(app.get('env')) // development
+console.log(process.env)
+```
+
+To define a `env` variable
+
+- Export in terminal: `NODE_ENV=development TEST=123 npm run dev`
+- Create a configuration file: `config.env`
+
+  ```env
+    NODE_ENV=development
+    PORT=3000
+  ```
+
+The environment name is always on the `UPPERCASE` and it is a convention to follow.
+
+To load those variables in the file `config.env` to the `Node app` environemnt variables, we
+use the `npm` package called `dotenv`.
+
+```sh
+npm i dotenv@7
+```
+
+The command below will read our variables from the file and save them into `NodeJS` environment
+variables.
+
+```js
+const dotenv = require('dotenv');
+
+dotenv.config({
+  path: './config.env',
+});
+
+const app = require('./app');
+
+console.log(process.env)
+```
+
+Only runs the `logger` when we are on the `development` environment
+
+```js
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+```
