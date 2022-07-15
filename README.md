@@ -1458,7 +1458,7 @@ router
   .delete(deleteTourById);
 ```
 
-### 7.14. Chaining multiple middleware functions
+### 7.15. Chaining multiple middleware functions
 
 ```js
 const checkPostBody = (req, res, next) => {
@@ -1483,3 +1483,14 @@ router
   .patch(updateTourById)
   .delete(deleteTourById);
 ```
+
+## 7.16. Serving static files
+
+Simply create a middleware to serve static files from a folder
+
+```js
+app.use(express.static(`${__dirname}/public`));
+```
+
+And then, we can open the browser and access to `http://localhost:3000/overview.html` to
+see the page.
