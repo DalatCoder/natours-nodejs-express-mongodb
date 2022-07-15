@@ -1639,3 +1639,7 @@ MongoDB documents are typed.
 Embedded documents
 
 ![Image](assets/mongodb5.png)
+
+### 9.2. Install MongoDB Compass tool
+
+[MongoDB Compass](https://www.mongodb.com/products/compass)
