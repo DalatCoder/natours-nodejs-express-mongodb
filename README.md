@@ -1615,3 +1615,27 @@ Write config file for `eslint`: `.eslintrc.json`
   }
 }
 ```
+
+## 9. Introduce to MongoDB
+
+### 9.1. What is MongoDB?
+
+> MongoDB is a document database with the scalability and flexibility that you want
+> with the querying and indexing that you need
+
+![Image](assets/mongodb.png)
+
+![Image](assets/mongodb1.png)
+
+Documents
+
+![Image](assets/mongodb2.png)
+
+BSON: Data format MongoDB uses for data storage. Like `JSON` but `typed`. So
+MongoDB documents are typed.
+
+![Image](assets/mongodb4.png)
+
+Embedded documents
+
+![Image](assets/mongodb5.png)
