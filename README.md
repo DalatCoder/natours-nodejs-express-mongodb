@@ -1920,3 +1920,18 @@ exports.updateTourById = async (req, res) => {
   });
 };
 ```
+
+### 12.4. Delete tour
+
+```js
+exports.deleteTourById = async (req, res) => {
+  const tourId = req.params.id;
+
+  await Tour.findByIdAndDelete(tourId);
+
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
+};
+```

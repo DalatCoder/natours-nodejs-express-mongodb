@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Tour = require('../models/tourModel');
 
-let tourData = JSON.parse(
+const tourData = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
@@ -65,27 +65,13 @@ exports.updateTourById = async (req, res) => {
   });
 };
 
-exports.deleteTourById = (req, res) => {
-  const tourId = req.params.id * 1;
+exports.deleteTourById = async (req, res) => {
+  const tourId = req.params.id;
 
-  tourData = tourData.filter(t => t.id !== tourId);
+  await Tour.findByIdAndDelete(tourId);
 
-  fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tourData),
-    err => {
-      if (err) {
-        res.status(500).json({
-          status: 'error',
-          message: 'error when saving file'
-        });
-        return;
-      }
-
-      res.status(204).json({
-        status: 'success',
-        data: null
-      });
-    }
-  );
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
 };
