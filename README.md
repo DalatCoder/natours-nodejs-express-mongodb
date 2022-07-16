@@ -1643,3 +1643,11 @@ Embedded documents
 ### 9.2. Install MongoDB Compass tool
 
 [MongoDB Compass](https://www.mongodb.com/products/compass)
+
+### 9.3. Create a hosted DB with Atlas
+
+Atlas is so-called database as a service provider.
+
+- Create a new project
+- Give yourself the owner permission
+- Build a cluster: it's basically like an instance of our database
