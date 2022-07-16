@@ -1846,3 +1846,27 @@ natours
 └───routes
     │   tourRoutes.js
 ```
+
+## 12. CRUD operation with `mongoose`
+
+### 12.1. Creating new document
+
+```js
+exports.createNewTour = async (req, res) => {
+  try {
+    const newTour = await Tour.create(req.body);
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tour: newTour
+      }
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Invalid data sent'
+    });
+  }
+};
+```
