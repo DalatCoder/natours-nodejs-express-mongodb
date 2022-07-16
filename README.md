@@ -1651,3 +1651,13 @@ Atlas is so-called database as a service provider.
 - Create a new project
 - Give yourself the owner permission
 - Build a cluster: it's basically like an instance of our database
+
+### 9.4. Connect to our hosted DB
+
+- Open `Connect` assistance
+- Add our current IP address
+- Create an account to access the DB and save those information to our `config.env` file
+- Choose connection method: Mongo Compass
+- After successfully connecting, we will see the 2 preconfig database named `admin` and `local`
+- Create new database called `natours`
+- Create new collection called `tours`
