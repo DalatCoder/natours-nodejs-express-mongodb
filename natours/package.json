@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start:dev": "nodemon server.js",
-    "start:prod": "NODE_ENV=production node server.js"
+    "start:prod": "NODE_ENV=production node server.js",
+    "import:tours": "node dev-data/data/import-dev-data.js --import",
+    "delete:tours": "node dev-data/data/import-dev-data.js --delete"
   },
   "keywords": [],
   "author": "Hieu Nguyen Trong",
