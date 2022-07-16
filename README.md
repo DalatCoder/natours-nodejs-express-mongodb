@@ -1780,3 +1780,48 @@ model must be `Captialized` for convention.
 ```js
 const Tour = mongoose.model('Tour', tourSchema);
 ```
+
+## 11. Intro to back-end architecture
+
+### 11.1. MVC architecture in Express
+
+In this architecture:
+
+- `model layer`: concerned with everything about application data and the `bussiness logic`.
+- `controller layer`: handle the application's request, interact with models
+and send back response to the client (`application logic`)
+- `view layer`: is neccessary if we have a graphical interface in our app (SSR website), contains
+template (`presentation logic`)
+
+MVC with REST API
+
+![Image](assets/mvcapi.png)
+
+MVC with SSR
+
+![Image](assets/mvcpug.png)
+
+One of the big goals of `MVC` is to seperate `Business logic` from `Application logic`.
+
+Application logic:
+
+- all the code that is only concerned about the application's implementation.
+- the logic that makes the app actually work. For example, a big part of application logic
+in Express is all about managing requests and responses.
+- application logic is more about technical stuffs.
+- serve as a brigde between model layer and view layer
+
+Business logic:
+
+- all the code that actually solves the business problem
+- the code that is directly related to the business rules, to how the business works, and the
+business needs, is business logic.
+
+> `Fast models/thin controllers`: which says we should offload as much logic as possible
+> into the models, to keep the controllers as simple and lean as possible.
+
+So a fat model will have as much business logic as we can offload to it, and a thin controller
+will have little logic as possible. So that the controller is really mostly for managing
+the application's requests and responses.
+
+![Image](assets/mvc.png)
