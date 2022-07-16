@@ -1716,3 +1716,20 @@ mongoose
 ```
 
 Empty our `natours` database for `Mongoose` `Model`
+
+### 10.2. What is `Mongoose`?
+
+- Mongoose is an Object Data Modeling (ODM) library for `MongoDB`
+and `NodeJS`
+- It provides a higher level of abstraction: It's a bit like the relationship
+between `Express` and `Node`, so `Express` is a layer of abstraction over regular
+`Node`. While `Mongoose` is a layer of abstraction over the regular `MongoDB` driver.
+- Some of the features `mongoose` gives us:
+
+  - `Schema` to model data and relationship
+  - easy data validation
+  - simple query API
+  - middleware
+  - ...
+
+![Mongoose](assets/mongoose.png)
