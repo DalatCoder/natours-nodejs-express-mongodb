@@ -17,9 +17,27 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true
   })
-  .then(conn => {
+  .then(() => {
     console.log('DB connection successfully');
   });
+
+const tourSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'A tour must have a name!'],
+    unique: true
+  },
+  rating: {
+    type: Number,
+    default: 4.5
+  },
+  price: {
+    type: Number,
+    required: true
+  }
+});
+
+const Tour = mongoose.model('Tour', tourSchema);
 
 const app = require('./app');
 

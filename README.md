@@ -1733,3 +1733,50 @@ between `Express` and `Node`, so `Express` is a layer of abstraction over regula
   - ...
 
 ![Mongoose](assets/mongoose.png)
+
+### 10.3. Creating a simple `Tour` model
+
+> `Mongoose` is all about `model`. Model is like a blueprint that we use
+> to create documents. We can perform CRUD operations on these model.
+
+In order to create a `model`, we need a `schema`. We use schema to describe
+our data, default values, validate data, ...
+
+Mongoose uses native `Javascript` types like: `String`, `Boolean`, `Number`,...
+
+```js
+const tourSchema = mongoose.Schema({
+  name: String,
+  rating: Number,
+  price: Number
+});
+```
+
+For advanced use cases, we can define `schema type option` for some specific filed.
+
+```js
+const tourSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'A tour must have a name!'],
+    unique: true
+  },
+  rating: {
+    type: Number,
+    default: 4.5
+  },
+  price: {
+    type: Number,
+    required: true
+  }
+});
+```
+
+The `required: [true, 'A tour must have a name!']` is a `validator`.
+
+To create a `model`, we simple pass the `tour schema` into `mongoose.model()`. The
+model must be `Captialized` for convention.
+
+```js
+const Tour = mongoose.model('Tour', tourSchema);
+```
