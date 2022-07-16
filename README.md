@@ -1661,3 +1661,58 @@ Atlas is so-called database as a service provider.
 - After successfully connecting, we will see the 2 preconfig database named `admin` and `local`
 - Create new database called `natours`
 - Create new collection called `tours`
+
+## 10. Using MongoDB with Mongoose
+
+### 10.1. Connect our DB to Express app
+
+Get connection string from Atlas:
+
+- Choose Connect helper
+- Choose `Connect Your Application`
+- The sample code looks like:
+
+  ```js
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const uri = "mongodb+srv://<USERNAME>:<PASSWORD>@cluster0.3hqa1.mongodb.net/?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+    client.connect(err => {
+      const collection = client.db("test").collection("devices");
+      // perform actions on the collection object
+      client.close();
+    });
+  ```
+
+Put the connection string into our `config.env` file
+
+Install `mongoose` via `npm`: `npm i mongoose@5`
+
+Go to `server.js` for the connection code
+
+```js
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+
+dotenv.config({
+  path: './config.env'
+});
+
+const { DB_CONNECTION_STRING, DB_USERNAME, DB_PASS, DB_NAME } = process.env;
+const DB_URI = DB_CONNECTION_STRING.replace('<USERNAME>', DB_USERNAME)
+  .replace('<PASSWORD>', DB_PASS)
+  .replace('<DB_NAME>', DB_NAME);
+
+mongoose
+  .connect(DB_URI, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true
+  })
+  .then(conn => {
+    console.log('DB connection successfully');
+  });
+  .catch(() => console.log('Error'))
+```
+
+Empty our `natours` database for `Mongoose` `Model`
