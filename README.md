@@ -1825,3 +1825,24 @@ will have little logic as possible. So that the controller is really mostly for 
 the application's requests and responses.
 
 ![Image](assets/mvc.png)
+
+### 11.2. Refactor code to MVC
+
+```txt
+natours
+│   app.js
+│   server.js    
+│   package.json    
+│   package-lock.json    
+│   config.env    
+│   config.env.example    
+│
+└───models
+│   │   tourModel.js
+│   
+└───controllers
+│   │   tourController.js
+│   
+└───routes
+    │   tourRoutes.js
+```
