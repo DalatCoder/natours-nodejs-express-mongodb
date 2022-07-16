@@ -48,45 +48,21 @@ exports.createNewTour = async (req, res) => {
   }
 };
 
-exports.updateTourById = (req, res) => {
-  const tourId = req.params.id * 1;
-  const tour = tourData.find(t => t.id === tourId);
+exports.updateTourById = async (req, res) => {
+  const tourId = req.params.id;
+  const updatedFields = req.body;
 
-  if (!tour) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'tour not found'
-    });
-    return;
-  }
+  const updatedTour = await Tour.findByIdAndUpdate(tourId, updatedFields, {
+    new: true,
+    runValidators: true
+  });
 
-  const updatedTour = {
-    ...tour,
-    ...req.body
-  };
-
-  tourData = tourData.map(t => (t.id === tourId ? updatedTour : t));
-
-  fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tourData),
-    err => {
-      if (err) {
-        res.status(500).json({
-          status: 'error',
-          message: 'error when saving file'
-        });
-        return;
-      }
-
-      res.status(200).json({
-        status: 'success',
-        data: {
-          tour: updatedTour
-        }
-      });
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: updatedTour
     }
-  );
+  });
 };
 
 exports.deleteTourById = (req, res) => {

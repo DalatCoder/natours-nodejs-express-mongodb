@@ -1899,3 +1899,24 @@ exports.getTourById = async (req, res) => {
   });
 };
 ```
+
+### 12.3. Update tour
+
+```js
+exports.updateTourById = async (req, res) => {
+  const tourId = req.params.id;
+  const updatedFields = req.body;
+
+  const updatedTour = await Tour.findByIdAndUpdate(tourId, updatedFields, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: updatedTour
+    }
+  });
+};
+```
