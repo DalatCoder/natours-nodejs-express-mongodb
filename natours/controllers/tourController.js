@@ -1,11 +1,13 @@
 const fs = require('fs');
 const Tour = require('../models/tourModel');
 
-let tours = JSON.parse(
+let tourData = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
-exports.getAllTours = (req, res) => {
+exports.getAllTours = async (req, res) => {
+  const tours = await Tour.find();
+
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -15,18 +17,10 @@ exports.getAllTours = (req, res) => {
   });
 };
 
-exports.getTourById = (req, res) => {
-  const tourId = req.params.id * 1;
+exports.getTourById = async (req, res) => {
+  const tourId = req.params.id;
 
-  const tour = tours.find(t => t.id === tourId);
-
-  if (!tour) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'tour not found'
-    });
-    return;
-  }
+  const tour = await Tour.findById(tourId);
 
   res.status(200).json({
     status: 'success',
@@ -56,7 +50,7 @@ exports.createNewTour = async (req, res) => {
 
 exports.updateTourById = (req, res) => {
   const tourId = req.params.id * 1;
-  const tour = tours.find(t => t.id === tourId);
+  const tour = tourData.find(t => t.id === tourId);
 
   if (!tour) {
     res.status(404).json({
@@ -71,11 +65,11 @@ exports.updateTourById = (req, res) => {
     ...req.body
   };
 
-  tours = tours.map(t => (t.id === tourId ? updatedTour : t));
+  tourData = tourData.map(t => (t.id === tourId ? updatedTour : t));
 
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tours),
+    JSON.stringify(tourData),
     err => {
       if (err) {
         res.status(500).json({
@@ -98,11 +92,11 @@ exports.updateTourById = (req, res) => {
 exports.deleteTourById = (req, res) => {
   const tourId = req.params.id * 1;
 
-  tours = tours.filter(t => t.id !== tourId);
+  tourData = tourData.filter(t => t.id !== tourId);
 
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tours),
+    JSON.stringify(tourData),
     err => {
       if (err) {
         res.status(500).json({

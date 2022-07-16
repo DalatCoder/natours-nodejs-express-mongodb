@@ -1870,3 +1870,32 @@ exports.createNewTour = async (req, res) => {
   }
 };
 ```
+
+### 12.2. Reading tours
+
+```js
+exports.getAllTours = async (req, res) => {
+  const tours = await Tour.find();
+
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      tours
+    }
+  });
+};
+
+exports.getTourById = async (req, res) => {
+  const tourId = req.params.id;
+
+  const tour = await Tour.findById(tourId);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour
+    }
+  });
+};
+```
