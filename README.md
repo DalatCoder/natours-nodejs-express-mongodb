@@ -2079,3 +2079,57 @@ Then, we define `2 script` to run
     "delete:tours": "node dev-data/data/import-dev-data.js --delete"
   },
 ```
+
+## 14. Build common API features
+
+### 14.1. Filtering
+
+Allow users to filter data base on query string.
+
+We can get all the query params via `query` object
+
+```js
+const { query } = req;
+```
+
+2 ways to query data in `mongoose`
+
+- with `filter` object
+- with some specific methods
+
+With `filter` object
+
+```js
+const tours = Tour.find(query);
+```
+
+With some specific methods to build `query`
+
+```js
+const tours = Tour.find()
+                  .where('duration').equals(5)
+                  .where('difficulty').equals('easy')
+```
+
+We will use the first method, which is using `filter` object. However, some query
+such as `page` or `sort` are not intended to be queried. We should exclude them
+from the `filter` object.
+
+```js
+exports.getAllTours = async (req, res) => {
+  const queryObj = { ...req.query };
+
+  const excludedFields = ['page', 'sort', 'limit', 'fields'];
+  excludedFields.forEach(e => delete queryObj[e]);
+
+  const tours = await Tour.find(queryObj);
+
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      tours
+    }
+  });
+};
+```
