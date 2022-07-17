@@ -2351,3 +2351,37 @@ if (req.query.page) {
   if (skip >= numTours) throw new Error('This page does not exists');
 }
 ```
+
+### 14.6. Aliasing
+
+Provide an `alias route` to a request that might be very popular.
+
+For example:
+
+- `/api/v1/tours/top-5-cheap` is an alias to `/api/v1/tours?limit=5&sort=price,-ratingsAverage`
+
+So, we need to define a new `route`
+
+```js
+router.route('/top-5-cheap').get(() => {});
+```
+
+Now, we need to `add` a `middleware` to prepare query params, and the pass all
+of these to the `getAllTours` handler.
+
+Create a `middleware` to prepare `query object` called `aliasTopTours`
+
+```js
+exports.aliasTopTous = (req, res, next) => {
+  req.query.limit = 5;
+  req.query.sort = 'price,-ratingsAverage';
+
+  next();
+};
+```
+
+And then, chain the `middleware` to to `middleware stack` of the `route`
+
+```js
+router.route('/top-5-cheap').get(aliasTopTous, getAllTours);
+```
