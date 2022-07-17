@@ -2630,3 +2630,105 @@ exports.getTourStats = async (req, res) => {
   });
 };
 ```
+
+### 14.9. Aggregation pipeline - unwinding and projecting
+
+Let imagine that we are implementing a function to calculate the busiest month
+of a given year. So basically by calculating how many tours start in each of
+the month of the given year.
+
+Every tour have an array of start dates like this
+
+```json
+{
+  "startDates": [
+    "2021-12-16T03:00:00.000Z",
+    "2022-01-16T03:00:00.000Z",
+    "2022-12-12T03:00:00.000Z"
+  ],
+}
+```
+
+Now, to count the number of tours in every month, we need to extract the `start dates` array
+with every start date corresponding to `1 tour` like this. And this is called `unwind`
+
+```json
+{
+  "tour1": {
+    startDate: "2021-12-16T03:00:00.000Z"
+  },
+  "tour1": {
+    startDate: "2022-01-16T03:00:00.000Z"
+  },
+  "tour1": {
+    startDate: "2022-12-12T03:00:00.000Z"
+  }
+}
+```
+
+What `$unwind` do is basically `deconstruct` and `array field` from the `input document`
+and then `output` `one document` for each `element` of the array.
+
+Below is the `$unwind` stages to `deconstruct` the `startDates` array
+
+```js
+{
+  $unwind: '$startDates'
+},
+```
+
+After getting all of the tours, we need to `filter` them by the given year
+
+```js
+{
+  $match: {
+    startDates: {
+      $gte: new Date(`${year}-01-01`),
+      $lte: new Date(`${year}-12-31`)
+    }
+  }
+},
+```
+
+Then, we group to count number of tours start in each month, and push the name of the tours
+into an array for convinient.
+
+```js
+{
+  $group: {
+    _id: { $month: '$startDates' },
+    numTourStarts: { $sum: 1 },
+    tours: {
+      $push: '$name'
+    }
+  }
+}
+```
+
+After that, we use the next `stage` to add fields from the fly to the result. Because
+the month value is currently stored in the `_id` field. We simple assign that value
+to the `month` field.
+
+```js
+{
+  $addFields: { month: '$_id' }
+}
+```
+
+We can omit the `_id` field from the result by using `project` stage
+
+```js
+{
+  $project: {
+    _id: 0
+  }
+}
+```
+
+Finally, we can use the `sort` stage to sort the number of tours in each month
+
+```js
+{
+  $sort: { numTourStarts: -1 }
+}
+```
