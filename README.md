@@ -2732,3 +2732,43 @@ Finally, we can use the `sort` stage to sort the number of tours in each month
   $sort: { numTourStarts: -1 }
 }
 ```
+
+### 14.10. Virtual properties
+
+Virtual properties are basically fields that we can define on our `schema` but that will not
+be persisted.
+
+Virtual properties make alot of sense for fields that derived from one another.
+
+In this example, we will define a virtual property for store tour duration in `week`
+
+```js
+tourSchema.virtual('durationWeeks').get(function() {
+  return this.duration / 7;
+});
+```
+
+In the code above, we define a virtual property called `durationWeeks` and then provide
+a `getter` which take a `function`. Because we need to use the `this` keyword in the
+callback function, so that we don't use `arrow function` here.
+
+For adding virtual properties to our results, we need to add some `schema options`
+
+```js
+const tourSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'A tour must have a name'],
+      unique: true,
+      trim: true
+    },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
+);
+```
+
+We can't use the virtual properties for query because it doesn't exist on the DB.
