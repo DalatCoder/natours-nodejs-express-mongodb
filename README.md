@@ -2807,7 +2807,7 @@ tourSchema.pre('save', function(next) {
 });
 ```
 
-The `post-hook` gets the `next` function and the `saved document` to 
+The `post-hook` gets the `next` function and the `saved document` to
 its params.
 
 ```js
