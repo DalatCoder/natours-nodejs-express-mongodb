@@ -2180,3 +2180,104 @@ queryString = queryString.replace(
 
 const tours = await Tour.find(JSON.parse(queryString));
 ```
+
+### 14.3. `query` object in `mongoose`
+
+When we execute the statement below, the `query` object will be returned. If
+we `await` this `query` object, we can get the `results`.
+
+```js
+const tours = await Tour.find(JSON.parse(queryString));
+```
+
+However, for more complex queries like `sort`, `paginate`, `project`. We need
+to use some more methods on that returned `query`. So the solution is, we save
+the `query` object to a variable, chain some `methods` to it and then `await` it.
+
+```js
+let query = Tour.find(JSON.parse(queryString));
+
+// query.sort()
+// query.paginate()
+// query.project()
+
+const tours = await query;
+```
+
+### 14.3. Sorting
+
+Sort by `price` from `lowest` to `highest` or `ascending` order
+
+```txt
+http://localhost:8000/api/v1/tours?sort=price
+```
+
+Sort by `price` from `highest` to `lowest` or `descending` order
+
+```txt
+http://localhost:8000/api/v1/tours?sort=-price
+```
+
+And the solution for this:
+
+- Check if there is a `sort` properties on the `req.query` object
+- Chain the `sort()` methods to the existing `mongoose query`
+- `await` this changed `query` to get the results
+
+```js
+exports.getAllTours = async (req, res) => {
+  // 1.1. Filtering
+  const queryObj = { ...req.query };
+
+  const excludedFields = ['page', 'sort', 'limit', 'fields'];
+  excludedFields.forEach(e => delete queryObj[e]);
+
+  // 1.2. Advanced filtering
+  let queryString = JSON.stringify(queryObj);
+  queryString = queryString.replace(
+    /\b(gte|gt|lte|lt)\b/g,
+    match => `$${match}`
+  );
+
+  let query = Tour.find(JSON.parse(queryString));
+
+  // 2) Sorting
+  if (req.query.sort) {
+    query = query.sort(req.query.sort);
+  }
+
+  const tours = await query;
+
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      tours
+    }
+  });
+};
+```
+
+If we have more than `1 field` to sort, this is the solution
+
+- The `URL` is: `http://localhost:8000/api/v1/tours?sort=price,-duration`
+- The `sort()` method in `mongoose`: `query.sort('price -duration`)
+- We need to `convert` the `price,-duration` to `price -duration`
+
+```js
+if (req.query.sort) {
+  const sortBy = req.query.sort.split(',').join(' ');
+  query = query.sort(sortBy);
+}
+```
+
+Add default sorting by the time the `tour` is created.
+
+```js
+if (req.query.sort) {
+  const sortBy = req.query.sort.split(',').join(' ');
+  query = query.sort(sortBy);
+} else {
+  query = query.sort('-createdAt');
+}
+```
