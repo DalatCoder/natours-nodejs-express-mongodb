@@ -2315,3 +2315,39 @@ const tourSchema = mongoose.Schema({
   }
 });
 ```
+
+### 14.5. Pagination
+
+The `URL`: `http://localhost:8000/api/v1/tours?page=1&limit=10`
+
+We will use `2` methods in `mongoose`
+
+- `skip()`
+- `limit()`
+
+For some examples
+
+- `page=1&limit=10`: we need to get the results from `1-10`
+- `page=2&limit=10`: we need to get the results from `11-20`
+- `page=3&limit=10`: we need to get the results from `21-30`
+
+So the formulate is: `(page - 1) * limit`
+
+```js
+const page = req.query.page * 1 || 1;
+const limit = req.query.limit * 1 || 10;
+
+const skip = (page - 1) * limit;
+
+query = query.skip(skip).limit(limit);
+```
+
+If user enter the exceeded page, we need to return an error
+
+```js
+if (req.query.page) {
+  const numTours = await Tour.countDocuments();
+
+  if (skip >= numTours) throw new Error('This page does not exists');
+}
+```
