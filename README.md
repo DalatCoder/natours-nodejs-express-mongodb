@@ -2477,3 +2477,156 @@ exports.getAllTours = async (req, res) => {
   });
 };
 ```
+
+### 14.8. Aggregation pipeline - matching and grouping
+
+We basically define a pipeline that all documents from a certain collection go through
+where they are processed step by step in order to transform them into aggregated results.
+
+For example, we can use the aggregation pipeline in order to calculate the average, or
+calculating minimun and maximum values.
+
+We pass and array of steps in to the `aggregate` method, or on the other hands, called `stages`
+
+[Learn more about aggregation pipeline](https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/)
+
+```js
+exports.getTourStats = async (req, res) => {
+  const stages = [
+    {
+      $match: { ratingsAverage: { $gte: 4.5 } }
+    },
+    {
+      $group: {
+        _id: null, // group by
+        numTours: { $sum: 1 },
+        numRatings: { $sum: '$ratingsQuantity' },
+        avgRating: { $avg: '$ratingsAverage' },
+        avgPrice: { $avg: '$price' },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' }
+      }
+    }
+  ];
+  
+  const stats = await Tour.aggregate(stages);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      stats
+    }
+  });
+};
+```
+
+In the code above, all the `tours` will be processed by the 2 `steps` (or `stages`)
+
+- First, we filter only the tours that have the rating average above `4.5`
+- Second, we have all the `filtered tours` in one big `group`, where we can manipulate the
+data we need.
+
+  - `_id` used for `group by` operator, `null` means group all `tours` into `one big group`
+  - `numTours` counts the number of tours by `sum` by `1`
+  - the field name in `$group` must be `prefix` with the `$` operator
+
+If we want to calculate the statistics by `difficulty`, use the code below
+
+```js
+exports.getTourStats = async (req, res) => {
+  const stages = [
+    {
+      $match: { ratingsAverage: { $gte: 4.5 } }
+    },
+    {
+      $group: {
+        _id: '$difficulty', 
+        numTours: { $sum: 1 },
+        numRatings: { $sum: '$ratingsQuantity' },
+        avgRating: { $avg: '$ratingsAverage' },
+        avgPrice: { $avg: '$price' },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' }
+      }
+    }
+  ];
+  
+  const stats = await Tour.aggregate(stages);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      stats
+    }
+  });
+};
+```
+
+For `sorting stage`, we will use the `field name` in the `group stage`
+
+```js
+exports.getTourStats = async (req, res) => {
+  const stats = await Tour.aggregate([
+    {
+      $match: { ratingsAverage: { $gte: 4.5 } }
+    },
+    {
+      $group: {
+        _id: '$difficulty',
+        numTours: { $sum: 1 },
+        numRatings: { $sum: '$ratingsQuantity' },
+        avgRating: { $avg: '$ratingsAverage' },
+        avgPrice: { $avg: '$price' },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' }
+      }
+    },
+    {
+      $sort: { avgPrice: 1 }
+    }
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      stats
+    }
+  });
+};
+```
+
+We can also repeat the `stages` for our own needs
+
+```js
+exports.getTourStats = async (req, res) => {
+  const stats = await Tour.aggregate([
+    {
+      $match: { ratingsAverage: { $gte: 4.5 } }
+    },
+    {
+      $group: {
+        _id: '$difficulty',
+        numTours: { $sum: 1 },
+        numRatings: { $sum: '$ratingsQuantity' },
+        avgRating: { $avg: '$ratingsAverage' },
+        avgPrice: { $avg: '$price' },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' }
+      }
+    },
+    {
+      $sort: { avgPrice: 1 }
+    },
+    {
+      $match: { _id: { $ne: 'easy' } }
+    }
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      stats
+    }
+  });
+};
+```
