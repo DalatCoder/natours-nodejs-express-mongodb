@@ -2133,3 +2133,50 @@ exports.getAllTours = async (req, res) => {
   });
 };
 ```
+
+### 14.2. Advanced filtering with more complex `query`
+
+Write a query string contains operator, the operator should be inside the `[]`.
+The `[]` is the standard way of writing these operator.
+
+```txt
+http://localhost:8000/api/v1/tours?duration[gte]=5&difficulty=easy
+```
+
+The `req.query` object will looks like
+
+```js
+{
+  difficulty: 'easy',
+  duration: {
+    gte: '5'
+  }
+}
+```
+
+The `filter` object in `mongodb` looks like
+
+```js
+{
+  difficulty: 'easy',
+  duration: {
+    $gte: '5'
+  }
+}
+```
+
+We need to add the `$` in front of the `operator`. So the solution is:
+
+- Convert the `query object` to `string`
+- Use `regex` to find and replace all of the `operator`
+- Convert the `string` to the `object` again
+
+```js
+let queryString = JSON.stringify(queryObj);
+queryString = queryString.replace(
+  /\b(gte|gt|lte|lt)\b/g,
+  match => `$${match}`
+);
+
+const tours = await Tour.find(JSON.parse(queryString));
+```
