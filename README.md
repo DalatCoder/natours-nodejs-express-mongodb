@@ -2772,3 +2772,47 @@ const tourSchema = mongoose.Schema(
 ```
 
 We can't use the virtual properties for query because it doesn't exist on the DB.
+
+### 14.11. Document middleware
+
+Just like `express`, `mongoose` also has the concept of `middleware`.
+
+We can use middelware to make something happens between two events.
+For example, each time a new document is saved to the DB, we can
+run a function between a `save` command is issued and the actual
+saving of the document. Or also after the actual saving.
+
+And that's the reason why `Mongoose` middleware is also called
+`prehook` and `posthook`
+
+There are `4` types of middleware in `mongoose`
+
+- document: middlewares that can act on the currently processed document
+- query
+- aggregate
+- model
+
+The middleware below will be called before an actual document is saved
+to the database. Runs only `before` the `.save()` and `.create()`. We will
+use this function to create a `slug` before each document is saved to the
+database. The `pre-hook` only gets the `next` function to its params.
+
+```js
+tourSchema.pre('save', function(next) {
+  this.slug = slugify(this.name, {
+    lower: true
+  });
+
+  next();
+});
+```
+
+The `post-hook` gets the `next` function and the `saved document` to 
+its params.
+
+```js
+tourSchema.post('save', function(doc, next) {
+  console.log(doc);
+  next();
+});
+```
