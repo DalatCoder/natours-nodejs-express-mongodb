@@ -2281,3 +2281,37 @@ if (req.query.sort) {
   query = query.sort('-createdAt');
 }
 ```
+
+### 14.4. Projecting
+
+The `URL`: `http://localhost:8000/api/tours?fields=name,duration,difficulty,price`
+
+- The query string we get in `req.query.fields`: `name,duration,difficulty,price`
+- The string `mongoose` needs in the `select` method: `select('name duration difficulty price')`
+
+```js
+if (req.query.fields) {
+  const fields = req.query.fields.split(',').join(' ');
+  query = query.select(fields);
+} 
+```
+
+In case we need to exclude fields from the `response`
+
+```js
+query = query.select('-__v');
+```
+
+We can exclude a field from the `schema` like this
+
+```js
+const tourSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'A tour must have a name'],
+    unique: true,
+    trim: true
+    select: false
+  }
+});
+```
